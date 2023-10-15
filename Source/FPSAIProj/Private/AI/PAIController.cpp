@@ -17,5 +17,7 @@ void APAIController::BeginPlay()
 	if(MyPawn)
 	{
 		GetBlackboardComponent()->SetValueAsVector("LocationToPlayer", MyPawn->GetActorLocation()); // setting blackboard's component exposed in the editor to pawn's location (BB key was named LocationToPlayer)
+
+		GetBlackboardComponent()->SetValueAsObject("Player", MyPawn); // setting object in BB to player's pawn
 	}
 }
