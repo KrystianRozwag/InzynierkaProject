@@ -32,13 +32,15 @@ EBTNodeResult::Type UPBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Own
 		FRotator MuzzleRotation = Direction.Rotation(); //setting rotation of the muzzle from Direction vector
 
 		FActorSpawnParameters Parameters;
-		Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //collision parameter for bullet
 
-		AActor* Bullet = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Parameters); //spawn projectile (bullet) 
+		AActor* Bullet = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Parameters); //spawn projectile (bullet)
+
 		if (FireSound != nullptr)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, AIPawn->GetActorLocation());
 		}
+
 		return Bullet ? EBTNodeResult::Succeeded : EBTNodeResult::Failed; //if bullet hit the player, then succeeded
 	}
 	return EBTNodeResult::Failed;
