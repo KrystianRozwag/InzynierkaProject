@@ -19,7 +19,7 @@ void APAICharacter::PostInitializeComponents()
 {
 
 	Super::PostInitializeComponents();
-	PawnSensingComponent->OnSeePawn.AddDynamic(this, &APAICharacter::OnPawnSeen);
+	PawnSensingComponent->OnSeePawn.AddDynamic(this, &APAICharacter::OnPawnSeen); //binding object and OnPawnSeen to OnSeePawn delegate
 }
 //method to get player if seen (by using dynamic delegate to PawnSensingComponent method) and set its pawn as new value in blackboard component
 void APAICharacter::OnPawnSeen(APawn* Pawn)

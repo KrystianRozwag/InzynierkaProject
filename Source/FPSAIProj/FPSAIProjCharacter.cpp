@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "PHealthComponent.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,8 +36,17 @@ AFPSAIProjCharacter::AFPSAIProjCharacter()
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
+	HealthComponent = CreateDefaultSubobject<UPHealthComponent>("HealthComponent");
+
+
 }
 
+void AFPSAIProjCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	HealthComponent->OnHealthChanged.AddDynamic(this, &AFPSAIProjCharacter::OnHealthChanged);
+}
 void AFPSAIProjCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -98,6 +108,17 @@ void AFPSAIProjCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+void AFPSAIProjCharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth,
+	float Delta)
+{
+	if(NewHealth<= 0.f && Delta <0.f)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		DisableInput(PlayerController);
+	}
+}
+
 
 void AFPSAIProjCharacter::SetHasRifle(bool bNewHasRifle)
 {

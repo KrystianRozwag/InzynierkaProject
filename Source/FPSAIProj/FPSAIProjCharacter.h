@@ -13,7 +13,7 @@ class USceneComponent;
 class UCameraComponent;
 class UAnimMontage;
 class USoundBase;
-
+class UPHealthComponent;
 UCLASS(config=Game)
 class AFPSAIProjCharacter : public ACharacter
 {
@@ -71,10 +71,17 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+
+	UFUNCTION()
+		void OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth, float Delta);
 protected:
+
+	virtual void PostInitializeComponents() override;
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UPHealthComponent* HealthComponent;
 
 public:
 	/** Returns Mesh1P subobject **/

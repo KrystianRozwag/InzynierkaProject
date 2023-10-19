@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FPSAIProjProjectile.h"
+
+#include "PHealthComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -11,7 +13,7 @@ AFPSAIProjProjectile::AFPSAIProjProjectile()
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &AFPSAIProjProjectile::OnHit);		// set up a notification for when this component hits something blocking
-
+	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AFPSAIProjProjectile::OnActorOverlap); //if collision component is overlapped code runs OnActorOverlap to add/sub health
 	// Players can't walk on it
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	CollisionComp->CanCharacterStepUpOn = ECB_No;
@@ -29,6 +31,7 @@ AFPSAIProjProjectile::AFPSAIProjProjectile()
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
+
 }
 
 void AFPSAIProjProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -39,5 +42,22 @@ void AFPSAIProjProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Destroy();
+	}
+}
+//function to provide logic with losing/adding health to the hit actor after overlapping
+void AFPSAIProjProjectile::OnActorOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor)
+	{
+		//getting the health component to add logic, but GetComponentByClass returns objects of type UActorComponent, so it needs to be casted to a proper type
+		UPHealthComponent* HealthComponent = Cast<UPHealthComponent>(OtherActor->GetComponentByClass(UPHealthComponent::StaticClass()));
+
+		if(HealthComponent)
+		{
+			HealthComponent->ApplyHealthChange(-20.f);
+
+			Destroy();
+		}
 	}
 }
