@@ -28,20 +28,23 @@ void UTP_WeaponComponent::Fire()
 	// Try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{
-		UWorld* const World = GetWorld();
+		UWorld* const World = GetWorld(); //TODO fixing projectile spawning
 		if (World != nullptr)
 		{
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
 			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
-	
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	
-			// Spawn the projectile at the muzzle
-			World->SpawnActor<AFPSAIProjProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			SpawnParams.Instigator = Character;
+			// Ignore Player
+			//FCollisionQueryParams Params;
+			//Params.AddIgnoredActor(Character);
+
+		//	World->SpawnActor<AFPSAIProjProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			FTransform SpawnTM = FTransform(SpawnRotation, SpawnLocation); //was spawnrotation, checking if proj rotation works
+			World->SpawnActor<AFPSAIProjProjectile>(ProjectileClass, SpawnTM, SpawnParams);
 		}
 	}
 	

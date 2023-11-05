@@ -27,7 +27,7 @@ void UPBTService_CheckDistanceToAttack::TickNode(UBehaviorTreeComponent& OwnerCo
 				{
 					float DistanceToPlayer = FVector::Distance(PlayerActor->GetActorLocation(), AIPawn->GetActorLocation());
 
-					bool bInRange = DistanceToPlayer < 2000.f; //TODO change hardcoded value to parameter
+					bool bInRange = DistanceToPlayer < MinDistanceToPlayer; 
 					bool bHasLOSToPlayer = false;
 					if(bInRange)
 					{

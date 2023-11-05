@@ -20,6 +20,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Health")
 	float Health;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health")
+	float HealthMax;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -29,5 +31,8 @@ public:
 	FOnHealthChanged OnHealthChanged;
 
 	UFUNCTION(BlueprintCallable, Category="Health")
-	bool ApplyHealthChange(float Delta);
+	bool ApplyHealthChange(AActor* ActorPlayer, float Delta);
+
+	float GetHealthMax() const;
+	float GetHealth() const;
 };

@@ -8,7 +8,7 @@
 
 
 class UPawnSensingComponent;
-
+class UPHealthComponent;
 UCLASS()
 class FPSAIPROJ_API APAICharacter : public ACharacter
 {
@@ -18,8 +18,15 @@ public:
 	APAICharacter();
 
 protected:
+	UPROPERTY(VisibleAnywhere, Category="Effects")
+	FName TimeToHitParamName;
+
+	void SetTarget(AActor* NewTarget);
 
 	virtual void PostInitializeComponents() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPHealthComponent* HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UPawnSensingComponent* PawnSensingComponent;
@@ -27,4 +34,6 @@ protected:
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth, float Delta);
 };

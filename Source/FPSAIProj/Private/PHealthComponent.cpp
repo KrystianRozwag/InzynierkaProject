@@ -6,7 +6,8 @@
 // Sets default values for this component's properties
 UPHealthComponent::UPHealthComponent()
 {
-	Health = 100;
+	HealthMax = 100;
+	Health = HealthMax;
 }
 
 bool UPHealthComponent::IsPawnAlive()
@@ -14,11 +15,23 @@ bool UPHealthComponent::IsPawnAlive()
 	return true ? Health > 0.f : false;
 }
 
-
-bool UPHealthComponent::ApplyHealthChange(float Delta)
+float UPHealthComponent::GetHealthMax() const
 {
+	return HealthMax;
+}
+float UPHealthComponent::GetHealth() const
+{
+	return Health;
+}
+bool UPHealthComponent::ApplyHealthChange(AActor* ActorPlayer, float Delta)
+{
+	float OldHealth = Health;
+
+	Health = FMath::Clamp(Health + Delta, 0.f, HealthMax);
+
+	float NewDelta = Health - OldHealth;
 
 	Health += Delta;
-	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
-	return true;
+	OnHealthChanged.Broadcast(ActorPlayer, this, Health, NewDelta);
+	return NewDelta != 0;
 }
