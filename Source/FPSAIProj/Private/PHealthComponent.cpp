@@ -12,7 +12,12 @@ UPHealthComponent::UPHealthComponent()
 
 bool UPHealthComponent::IsPawnAlive()
 {
-	return true ? Health > 0.f : false;
+
+	if(Health > 0.0f)
+	{
+		return true;
+	}
+	return false;
 }
 
 float UPHealthComponent::GetHealthMax() const

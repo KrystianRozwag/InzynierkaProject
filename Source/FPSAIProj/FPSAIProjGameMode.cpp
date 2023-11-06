@@ -73,6 +73,7 @@ void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* Quer
 	if(LocationsToSpawn.Num() > 0)
 	{
 		GetWorld()->SpawnActor<AActor>(EnemyClass, LocationsToSpawn[0], FRotator::ZeroRotator);
+
 	}
 
 }

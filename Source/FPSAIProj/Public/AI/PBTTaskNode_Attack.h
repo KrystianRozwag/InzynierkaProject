@@ -22,5 +22,9 @@ protected:
 		USoundBase* FireSound;
 	UPROPERTY(EditAnywhere, Category = "AI")
 		TSubclassOf<AActor> ProjectileClass;
+	UPROPERTY(EditAnywhere, Category="AI")
+	float MaxSpread;
 
+public:
+	UPBTTaskNode_Attack();
 };

@@ -30,7 +30,7 @@ AFPSAIProjProjectile::AFPSAIProjProjectile()
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
-
+	
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 
@@ -67,9 +67,9 @@ void AFPSAIProjProjectile::OnActorOverlap(UPrimitiveComponent* OverlapComponent,
 		{
 			HealthComponent->ApplyHealthChange(GetInstigator(),-DamageAmount);
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, OtherActor->GetActorLocation(), FRotator(0, 0, 0)); //play sound at location of hit actor
-			Destroy();
 			AudioComponent->Stop();
 		}
+		Destroy();
 
 	}
 }

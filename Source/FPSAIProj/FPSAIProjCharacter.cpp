@@ -116,6 +116,9 @@ void AFPSAIProjCharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthCompo
 	{
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 		DisableInput(PlayerController);
+		PlayerController->bEnableClickEvents = 0;
+		PlayerController->UnPossess();
+		isPlayerDead = true;
 	}
 }
 

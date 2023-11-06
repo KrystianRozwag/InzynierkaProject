@@ -4,44 +4,75 @@
 #include "AI/PBTTaskNode_Attack.h"
 
 #include "AIController.h"
+#include "PHealthComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "FPSAIProj/FPSAIProjProjectile.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+UPBTTaskNode_Attack::UPBTTaskNode_Attack()
+{
+    MaxSpread = 5.f;
+}
 
 EBTNodeResult::Type UPBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	AAIController* AIController = OwnerComp.GetAIOwner();
-	if(ensure(AIController))
-	{
-		ACharacter* AIPawn = Cast<ACharacter>(AIController->GetPawn());
-		if(AIPawn == nullptr)
-		{
-			return EBTNodeResult::Failed;
-		}
 
-		FVector MuzzleLocation = AIPawn->GetMesh()->GetSocketLocation("Muzzle_01"); //get muzzle location from ai's rifle
+        AAIController* AIController = OwnerComp.GetAIOwner();
+        if (!ensure(AIController))
+        {
+            return EBTNodeResult::Failed;
+        }
 
-		AActor* Player = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject("Player")); //get player from blackboard component value
-		if(Player == nullptr)
-		{
-			return EBTNodeResult::Failed;
-		}
+        ACharacter* AIPawn = Cast<ACharacter>(AIController->GetPawn());
+        if (!AIPawn)
+        {
+            return EBTNodeResult::Failed;
+        }
 
-		FVector Direction = Player->GetActorLocation() - MuzzleLocation; //vector between actor location and AI's rifle's muzzle location so it points to player
-		FRotator MuzzleRotation = Direction.Rotation(); //setting rotation of the muzzle from Direction vector
+        FVector MuzzleLocation;
+        if (AIPawn->GetMesh() && AIPawn->GetMesh()->DoesSocketExist("Muzzle_01"))
+        {
+            MuzzleLocation = AIPawn->GetMesh()->GetSocketLocation("Muzzle_01");
+        }
+        else
+        {
+            return EBTNodeResult::Failed;
+        }
 
-		FActorSpawnParameters Parameters;
-		Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; //collision parameter for bullet
+        AActor* Player = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject("Player"));
+        if (!Player)
+        {
+            return EBTNodeResult::Failed;
+        }
+        UPHealthComponent* PlayerHealthComponent = Player->FindComponentByClass<UPHealthComponent>();
+        if (!PlayerHealthComponent->IsPawnAlive()) 
+        {
+            Player = nullptr;
+            return EBTNodeResult::Failed;
+        }
+        FVector Direction = Player->GetActorLocation() - MuzzleLocation;
+        FRotator MuzzleRotation = Direction.Rotation();
+        Direction.Normalize();
 
-		AActor* Bullet = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Parameters); //spawn projectile (bullet)
+        MuzzleRotation.Pitch += FMath::RandRange(0.f, MaxSpread); //added random range to give more random to AI's aim
+        MuzzleRotation.Yaw += FMath::RandRange(-MaxSpread, MaxSpread);
 
-		if (FireSound != nullptr)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, AIPawn->GetActorLocation());
-		}
+        FActorSpawnParameters Parameters;
+        Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        Parameters.Instigator = AIPawn;
 
-		return Bullet ? EBTNodeResult::Succeeded : EBTNodeResult::Failed; //if bullet hit the player, then succeeded
-	}
-	return EBTNodeResult::Failed;
+        AFPSAIProjProjectile* Bullet = GetWorld()->SpawnActor<AFPSAIProjProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, Parameters);
+
+        if (FireSound)
+        {
+            UGameplayStatics::PlaySoundAtLocation(AIPawn, FireSound, AIPawn->GetActorLocation());
+        }
+	    if(Bullet)
+	    {
+	        Bullet->GetProjectileMovement()->Velocity = Direction * Bullet->GetProjectileMovement()->MaxSpeed;
+	    }
+
+        return Bullet ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 }
