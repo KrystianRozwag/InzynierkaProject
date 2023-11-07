@@ -46,13 +46,12 @@ void APAICharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* 
 {
 	if(Delta < 0.f)
 	{
-		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
 		AAIController* AIController = Cast<AAIController>(GetController());
 		if(InstigatorActor != this)
 		{
 			if (AIController)
 			{
-				AIController->GetBlackboardComponent()->SetValueAsObject("Player", InstigatorActor); //adding reaction to AI if being hit by someone else (might be also another AI)
+				AIController->GetBlackboardComponent()->SetValueAsObject("Player", InstigatorActor); //if hit by player set value in blackboard so it immediately detects and turns toward the player
 			}
 		}
 

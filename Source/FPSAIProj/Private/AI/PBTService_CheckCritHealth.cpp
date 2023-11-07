@@ -21,7 +21,7 @@ void UPBTService_CheckCritHealth::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 		if(HealthComponent)
 		{
 			if (HealthComponent->GetHealth() < LowHealth) { 
-				bool bLowHealth = (HealthComponent->GetHealth() / HealthComponent->GetHealthMax() < LowHealth/100); // checking if health/max health is smaller than 40%
+				bool bLowHealth = (HealthComponent->GetHealth() / HealthComponent->GetHealthMax() < LowHealth/100); // checking if health/max health is smaller than 40% (set by default)
 				UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
 				BlackboardComponent->SetValueAsBool(LowHealthKey.SelectedKeyName, bLowHealth);
 			}

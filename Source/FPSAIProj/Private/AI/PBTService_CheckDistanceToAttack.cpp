@@ -11,34 +11,46 @@ void UPBTService_CheckDistanceToAttack::TickNode(UBehaviorTreeComponent& OwnerCo
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
-	UBlackboardComponent* BBComp = OwnerComp.GetBlackboardComponent(); //get blackboard component
+    UBlackboardComponent* BBComponent = OwnerComp.GetBlackboardComponent(); // Get the Blackboard component
 
-	if(BBComp)
-	{
-		/*from blackboard component get object set as value (player) and cast to AActor (because normally it returns UObject, which does not have the location)*/
-		AActor* PlayerActor = Cast<AActor>(BBComp->GetValueAsObject("Player")); 
-		if(PlayerActor)
-		{
-			AAIController* AIController = OwnerComp.GetAIOwner(); // retrieve controller of the blackboard component
-			if(AIController)
-			{
-				APawn* AIPawn = AIController->GetPawn(); // get the pawn used by ai controller
-				if(ensure(AIPawn))
-				{
-					float DistanceToPlayer = FVector::Distance(PlayerActor->GetActorLocation(), AIPawn->GetActorLocation());
+    if (!BBComponent)
+    {
+        return;
+    }
 
-					bool bInRange = DistanceToPlayer < MinDistanceToPlayer; 
-					bool bHasLOSToPlayer = false;
-					if(bInRange)
-					{
-						bHasLOSToPlayer = AIController->LineOfSightTo(PlayerActor); //added additional check if player is visible to AI and not behind wall etc.
-					}
+    AActor* PlayerActor = Cast<AActor>(BBComponent->GetValueAsObject("Player")); // Get the player from the Blackboard
+
+    if (!PlayerActor)
+    {
+        return;
+    }
+
+    AAIController* AIController = OwnerComp.GetAIOwner(); // Get the AI controller
+
+    if (!AIController)
+    {
+        return;
+    }
+
+    APawn* AIPawn = AIController->GetPawn(); // Get the pawn used by the AI controller
+
+    if (!ensure(AIPawn))
+    {
+        return;
+    }
+
+    float DistanceToPlayer = FVector::Distance(PlayerActor->GetActorLocation(), AIPawn->GetActorLocation());
+    bool bInRange = DistanceToPlayer < MinDistanceToPlayer; // Check if the player is within the minimum distance
+    bool bHasLOSToPlayer = false;
+
+    if (bInRange)
+    {
+        bHasLOSToPlayer = AIController->LineOfSightTo(PlayerActor); // Check if the player is visible to AI
+    }
+
+    // Set the Blackboard value based on range and line of sight to the player
+    BBComponent->SetValueAsBool(RangeToAttackKey.SelectedKeyName, (bInRange && bHasLOSToPlayer));
 
 
-					BBComp->SetValueAsBool(RangeToAttackKey.SelectedKeyName, (bInRange && bHasLOSToPlayer));
-				}
-			}
-		}
-	}
 
 }

@@ -68,8 +68,8 @@ void UTP_WeaponComponent::Fire()
 
 void UTP_WeaponComponent::AttachWeapon(AFPSAIProjCharacter* TargetCharacter)
 {
-w	Character = TargetCharacter;
-	if (Character == nullptr && Character->isPlayerDead == true)
+	Character = TargetCharacter;
+	if (Character == nullptr)
 	{
 		return;
 	}
@@ -88,10 +88,6 @@ w	Character = TargetCharacter;
 		{
 			// Set the priority of the mapping to 1, so that it overrides the Jump action with the Fire action when using touch input
 			Subsystem->AddMappingContext(FireMappingContext, 1);
-		}
-		if(Character->isPlayerDead == true)
-		{
-			return;
 		}
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
