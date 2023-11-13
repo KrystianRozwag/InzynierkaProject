@@ -17,7 +17,7 @@ APAICharacter::APAICharacter()
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
 	HealthComponent = CreateDefaultSubobject<UPHealthComponent>("HealthComponent");
 
-	TimeToHitParamName = "TimeOfHit";
+	TimeOfHitParamName = "TimeOfHit";
 }
 
 void APAICharacter::PostInitializeComponents()

@@ -69,7 +69,6 @@ void AFPSAIProjProjectile::OnActorOverlap(UPrimitiveComponent* OverlapComponent,
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, OtherActor->GetActorLocation(), FRotator(0, 0, 0)); //play sound at location of hit actor
 			AudioComponent->Stop();
 		}
-		Destroy();
-
 	}
+	Destroy();
 }

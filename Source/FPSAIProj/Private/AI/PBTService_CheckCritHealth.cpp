@@ -20,11 +20,20 @@ void UPBTService_CheckCritHealth::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 		DrawDebugString(GetWorld(), AIPawn->GetActorLocation(),FString::SanitizeFloat(HealthComponent->GetHealth()), 0, FColor::Green, 2.0f, false, 1);
 		if(HealthComponent)
 		{
-			if (HealthComponent->GetHealth() < LowHealth) { 
-				bool bLowHealth = (HealthComponent->GetHealth() / HealthComponent->GetHealthMax() < LowHealth/100); // checking if health/max health is smaller than 40% (set by default)
-				UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
-				BlackboardComponent->SetValueAsBool(LowHealthKey.SelectedKeyName, bLowHealth);
-			}
+			SetLowHealthInBlackboard(OwnerComp, HealthComponent);
+		}
+	}
+}
+// Function to check and set low health in the Blackboard
+void UPBTService_CheckCritHealth::SetLowHealthInBlackboard(UBehaviorTreeComponent& OwnerComp, UPHealthComponent* HealthComponent) const
+{
+	const float HealthPercentage = HealthComponent->GetHealth() / HealthComponent->GetHealthMax();
+	if (HealthPercentage <= LowHealth / 100.0f)
+	{
+		UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+		if (BlackboardComponent)
+		{
+			BlackboardComponent->SetValueAsBool(LowHealthKey.SelectedKeyName, true);
 		}
 	}
 }
