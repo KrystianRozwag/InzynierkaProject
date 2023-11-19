@@ -16,8 +16,24 @@ class AFPSAIProjGameMode : public AGameModeBase
 
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
+	int CreditsForKill;
+
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSubclassOf<AActor> EnemyClass;
+
+	/** MappingContext */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputMappingContext* DefaultMappingContext;
+
+	/** Jump Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* JumpAction;
+
+	/** Move Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="AI")
 	UEnvQuery* SpawnEnemyQuery;
@@ -33,11 +49,19 @@ protected:
 	void SpawnEnemyTimerElapsed();
 	UFUNCTION()
 	void OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
 public:
 	AFPSAIProjGameMode();
 
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
 
 	virtual void StartPlay() override;
+
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* LookAction;
 };
 
 

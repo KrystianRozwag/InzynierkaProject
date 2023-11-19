@@ -8,6 +8,7 @@
 #include "PHealthComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "FPSAIProj/FPSAIProjGameMode.h"
 #include "Perception/PawnSensingComponent.h"
 
 // Sets default values
@@ -60,6 +61,11 @@ void APAICharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* 
 			if(AIController)
 			{
 				AIController->GetBrainComponent()->StopLogic("Dead"); // stopping the BT because AI is dead
+			}
+			AFPSAIProjGameMode* GameMode = GetWorld()->GetAuthGameMode<AFPSAIProjGameMode>();
+			if (GameMode)
+			{
+				GameMode->OnActorKilled(GetOwner(), InstigatorActor);
 			}
 			GetMesh()->SetAllBodiesSimulatePhysics(true);
 			GetCapsuleComponent()->SetCollisionProfileName("NoCollision");

@@ -53,7 +53,7 @@ protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
+	virtual void BeginPlay();
 private:
 	/** The Character holding this weapon*/
 	AFPSAIProjCharacter* Character;

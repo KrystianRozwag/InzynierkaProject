@@ -127,6 +127,7 @@ void AFPSAIProjCharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthCompo
 		PlayerController->bEnableClickEvents = 0; //temp fix
 		DisableInput(PlayerController); // if player is dead, disabling input
 		PlayerController->UnPossess();
+		//PlayerController->SetPause(true);
 	}
 }
 

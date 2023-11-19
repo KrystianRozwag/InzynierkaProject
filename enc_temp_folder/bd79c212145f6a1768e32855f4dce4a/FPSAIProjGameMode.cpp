@@ -81,20 +81,26 @@ void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* Quer
 	if(LocationsToSpawn.Num() > 0)
 	{
 		GetWorld()->SpawnActor<AActor>(EnemyClass, LocationsToSpawn[0], FRotator::ZeroRotator);
+
 	}
+
 }
 
 void AFPSAIProjGameMode::RespawnPlayerElapsed(AController* Controller)
 {
+	if (Controller)
+	{
+		//Controller->UnPossess();
+		//RestartPlayer(Controller);
+		APlayerController* Player = Cast<APlayerController>(Controller);
+		if (Player)
+		{
+			//Player->bEnableClickEvents = 1; //temp fix
+			//Player->GetCharacter()->GetCapsuleComponent()->SetCollisionProfileName("CharacterMesh");
+			//Controller->Possess(Player->GetPawn());
+			UGameplayStatics::OpenLevel(GetWorld(), "AIProjMap");
+		}
 
-	if(!Controller)
-	{
-		return;
-	}
-	APlayerController* Player = Cast<APlayerController>(Controller);
-	if (Player)
-	{
-		UGameplayStatics::OpenLevel(GetWorld(), "AIProjMap");
 	}
 }
 void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
