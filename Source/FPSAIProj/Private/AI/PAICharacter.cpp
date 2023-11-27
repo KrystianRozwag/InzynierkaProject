@@ -45,23 +45,19 @@ void APAICharacter::OnPawnSeen(APawn* Pawn)
 void APAICharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth,
 	float Delta)
 {
-	if(Delta < 0.f)
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if(Delta < 0.f && AIController)
 	{
-		AAIController* AIController = Cast<AAIController>(GetController());
+
 		if(InstigatorActor != this)
 		{
-			if (AIController)
-			{
-				AIController->GetBlackboardComponent()->SetValueAsObject("Player", InstigatorActor); //if hit by player set value in blackboard so it immediately detects and turns toward the player
-			}
+			AIController->GetBlackboardComponent()->SetValueAsObject("Player", InstigatorActor); //if hit by player set value in blackboard so it immediately detects and turns toward the player
 		}
 
 		if(NewHealth <= 0.f)
 		{
-			if(AIController)
-			{
-				AIController->GetBrainComponent()->StopLogic("Dead"); // stopping the BT because AI is dead
-			}
+			AIController->GetBrainComponent()->StopLogic("Dead"); // stopping the BT because AI is dead
+
 			AFPSAIProjGameMode* GameMode = GetWorld()->GetAuthGameMode<AFPSAIProjGameMode>();
 			if (GameMode)
 			{

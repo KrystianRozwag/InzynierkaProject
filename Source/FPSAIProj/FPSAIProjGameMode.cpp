@@ -12,6 +12,7 @@
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -22,6 +23,8 @@ AFPSAIProjGameMode::AFPSAIProjGameMode()
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 	SpawnTimerInterval = 2.f;
+
+	RespawnDelay = 5.f;
 
 	CreditsForKill = 10;
 	PlayerStateClass = ACreditsPlayerState::StaticClass();
@@ -45,32 +48,49 @@ void AFPSAIProjGameMode::SpawnEnemyTimerElapsed()
 
 }
 
-void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
+int AFPSAIProjGameMode::CountEnemiesWithHealthComponent() const
 {
-
-	if(QueryStatus != EEnvQueryStatus::Success)
-	{
-			return;
-	}
-
-
 	int NumOfEnemies = 0;
-	for (TActorIterator<APAICharacter> It(GetWorld()); It; ++It) //using template for actor iteration. GetWorld() is passed to get all actors of class PAICharacter in the world
+
+	for (TActorIterator<APAICharacter> It(GetWorld()); It; ++It)
 	{
 		APAICharacter* Enemy = *It;
-		UPHealthComponent* HealthComponent = Cast<UPHealthComponent>(Enemy->GetComponentByClass(UPHealthComponent::StaticClass()));
-		if(HealthComponent)
+		//UPHealthComponent* HealthComponent = Cast<UPHealthComponent>(Enemy->GetComponentByClass(UPHealthComponent::StaticClass()));
+		UPHealthComponent* HealthComponent = Enemy->FindComponentByClass<UPHealthComponent>();
+
+		if (HealthComponent)
 		{
 			NumOfEnemies++;
 		}
 	}
 
+	return NumOfEnemies;
+}
+
+float AFPSAIProjGameMode::GetMaxNumOfEnemies() const
+{
 	float MaxNumOfEnemies = 10.f;
 
 	if (DifficultyCurve)
 	{
 		MaxNumOfEnemies = DifficultyCurve->GetFloatValue(GetWorld()->TimeSeconds);
 	}
+
+	return MaxNumOfEnemies;
+}
+
+void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
+{
+
+	if(QueryStatus != EEnvQueryStatus::Success)
+	{
+		return;
+	}
+
+	int NumOfEnemies = CountEnemiesWithHealthComponent();
+	float MaxNumOfEnemies = GetMaxNumOfEnemies();
+
+
 	if(NumOfEnemies >= MaxNumOfEnemies)
 	{
 		return;
@@ -78,15 +98,15 @@ void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* Quer
 
 	TArray<FVector> LocationsToSpawn;
 	QueryInstance->GetQueryResultsAsLocations(LocationsToSpawn);
+
 	if(LocationsToSpawn.Num() > 0)
 	{
 		GetWorld()->SpawnActor<AActor>(EnemyClass, LocationsToSpawn[0], FRotator::ZeroRotator);
 	}
 }
 
-void AFPSAIProjGameMode::RespawnPlayerElapsed(AController* Controller)
+void AFPSAIProjGameMode::RespawnPlayerTimeElapsed(AController* Controller)
 {
-
 	if(!Controller)
 	{
 		return;
@@ -100,24 +120,28 @@ void AFPSAIProjGameMode::RespawnPlayerElapsed(AController* Controller)
 void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
 	AFPSAIProjCharacter* Player = Cast<AFPSAIProjCharacter>(VictimActor);
-	if (Player)
+	APAICharacter* AICharacter = Cast<APAICharacter>(Killer);
+	if (Player) //if player killed
 	{
-		FTimerHandle TimerHandle_RespawnDelay;
+		FTimerHandle TimerHandle_PlayerRespawnDelay;
 
-		FTimerDelegate Delegate;
-		Delegate.BindUFunction(this, "RespawnPlayerElapsed", Player->GetController());
+		FTimerDelegate RespawnDelegate;
+		RespawnDelegate.BindUFunction(this, "RespawnPlayerTimeElapsed", Player->GetController()); //bind RespawnPlayerTimeElapsed function, so after delay it will run and restart the game
 
-		float RespawnDelay = 2.0f;
-		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
+		GetWorldTimerManager().SetTimer(TimerHandle_PlayerRespawnDelay, RespawnDelegate, RespawnDelay, false);
+		AICharacter->GetCharacterMovement()->DisableMovement();
+		Player->GetCharacterMovement()->StopMovementImmediately();
 	}
 
 	APawn* KillerPawn = Cast<APawn>(Killer);
-	if (KillerPawn)
+	if (!KillerPawn)
 	{
-		ACreditsPlayerState* PlayerState = KillerPawn->GetPlayerState<ACreditsPlayerState>();
-		if (PlayerState)
-		{
-			PlayerState->ApplyCreditsChange(CreditsForKill);
-		}
+		return;
+	}
+
+	ACreditsPlayerState* PlayerState = KillerPawn->GetPlayerState<ACreditsPlayerState>();
+	if (PlayerState)
+	{
+		PlayerState->ApplyCreditsChange(CreditsForKill);
 	}
 }

@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "FPSAIProjGameMode.h"
 #include "PHealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -124,9 +125,11 @@ void AFPSAIProjCharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthCompo
 			GameMode->OnActorKilled(Cast<AActor>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0)), InstigatorActor);
 		}
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+
 		PlayerController->bEnableClickEvents = 0; //temp fix
 		DisableInput(PlayerController); // if player is dead, disabling input
 		PlayerController->UnPossess();
+
 	}
 }
 

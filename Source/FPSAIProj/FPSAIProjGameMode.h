@@ -16,6 +16,9 @@ class AFPSAIProjGameMode : public AGameModeBase
 
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Player")
+	float RespawnDelay;
+
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
 	int CreditsForKill;
@@ -51,13 +54,20 @@ protected:
 	void OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
 	UFUNCTION()
-	void RespawnPlayerElapsed(AController* Controller);
+	void RespawnPlayerTimeElapsed(AController* Controller);
+
+	UFUNCTION()
+	int CountEnemiesWithHealthComponent() const;
+
+	UFUNCTION()
+	float GetMaxNumOfEnemies() const;
 public:
 	AFPSAIProjGameMode();
 
 	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
 
 	virtual void StartPlay() override;
+
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
