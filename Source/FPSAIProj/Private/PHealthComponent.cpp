@@ -12,7 +12,6 @@ UPHealthComponent::UPHealthComponent()
 
 bool UPHealthComponent::IsPawnAlive()
 {
-
 	if(Health > 0.0f)
 	{
 		return true;
@@ -28,7 +27,7 @@ float UPHealthComponent::GetHealth() const
 {
 	return Health;
 }
-bool UPHealthComponent::ApplyHealthChange(AActor* ActorPlayer, float Delta)
+bool UPHealthComponent::ApplyHealthChange(AActor* Actor, float Delta)
 {
 	float OldHealth = Health;
 
@@ -36,7 +35,6 @@ bool UPHealthComponent::ApplyHealthChange(AActor* ActorPlayer, float Delta)
 
 	float NewDelta = Health - OldHealth;
 
-	Health += Delta;
-	OnHealthChanged.Broadcast(ActorPlayer, this, Health, NewDelta);
-	return NewDelta != 0;
+	OnHealthChanged.Broadcast(Actor, this, Health, NewDelta);
+	return NewDelta < 0;
 }

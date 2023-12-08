@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/PBTTaskNode_Attack.h"
+#include "AI/PBTTask_Attack.h"
 
 #include "AIController.h"
 #include "PHealthComponent.h"
@@ -11,12 +11,12 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-UPBTTaskNode_Attack::UPBTTaskNode_Attack()
+UPBTTask_Attack::UPBTTask_Attack()
 {
     MaxSpread = 5.f;
 }
 
-EBTNodeResult::Type UPBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UPBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 
     AAIController* AIController = OwnerComp.GetAIOwner();
@@ -53,7 +53,7 @@ EBTNodeResult::Type UPBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Own
         Player = nullptr;
         return EBTNodeResult::Failed;
     }
-
+   // AIController->SetFocus(Player);
     FVector Direction = Player->GetActorLocation() - MuzzleLocation; // vector between actor location and AI's rifle's muzzle location so it points to player
     FRotator MuzzleRotation = Direction.Rotation(); //setting rotation of the muzzle from Direction vector
     Direction.Normalize();

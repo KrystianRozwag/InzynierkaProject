@@ -3,9 +3,6 @@
 
 #include "AI/PAIController.h"
 
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/GameplayStatics.h"
-
 void APAIController::BeginPlay()
 {
 	Super::BeginPlay();

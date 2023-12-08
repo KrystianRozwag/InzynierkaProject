@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "PBTTask_Health.generated.h"
+#include "PBTTask_Heal.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FPSAIPROJ_API UPBTTask_Health : public UBTTaskNode
+class FPSAIPROJ_API UPBTTask_Heal : public UBTTaskNode
 {
 	GENERATED_BODY()
 	

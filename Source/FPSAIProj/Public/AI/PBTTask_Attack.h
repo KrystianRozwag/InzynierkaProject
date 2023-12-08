@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "PBTTaskNode_Attack.generated.h"
+#include "PBTTask_Attack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FPSAIPROJ_API UPBTTaskNode_Attack : public UBTTaskNode
+class FPSAIPROJ_API UPBTTask_Attack : public UBTTaskNode
 {
 	GENERATED_BODY()
 
@@ -26,5 +26,5 @@ protected:
 	float MaxSpread;
 
 public:
-	UPBTTaskNode_Attack();
+	UPBTTask_Attack();
 };

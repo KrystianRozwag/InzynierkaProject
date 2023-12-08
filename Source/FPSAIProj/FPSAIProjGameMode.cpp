@@ -7,8 +7,6 @@
 #include "FPSAIProjCharacter.h"
 #include "PHealthComponent.h"
 #include "AI/PAICharacter.h"
-#include "Components/CapsuleComponent.h"
-#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
@@ -45,7 +43,6 @@ void AFPSAIProjGameMode::SpawnEnemyTimerElapsed()
 	{
 		QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &AFPSAIProjGameMode::OnQueryFinished);
 	}
-
 }
 
 int AFPSAIProjGameMode::CountEnemiesWithHealthComponent() const
@@ -55,7 +52,6 @@ int AFPSAIProjGameMode::CountEnemiesWithHealthComponent() const
 	for (TActorIterator<APAICharacter> It(GetWorld()); It; ++It)
 	{
 		APAICharacter* Enemy = *It;
-		//UPHealthComponent* HealthComponent = Cast<UPHealthComponent>(Enemy->GetComponentByClass(UPHealthComponent::StaticClass()));
 		UPHealthComponent* HealthComponent = Enemy->FindComponentByClass<UPHealthComponent>();
 
 		if (HealthComponent)
@@ -96,12 +92,12 @@ void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* Quer
 		return;
 	}
 
-	TArray<FVector> LocationsToSpawn;
-	QueryInstance->GetQueryResultsAsLocations(LocationsToSpawn);
+	TArray<FVector> LocationsToSpawnEnemies;
+	QueryInstance->GetQueryResultsAsLocations(LocationsToSpawnEnemies);
 
-	if(LocationsToSpawn.Num() > 0)
+	if(LocationsToSpawnEnemies.Num() > 0)
 	{
-		GetWorld()->SpawnActor<AActor>(EnemyClass, LocationsToSpawn[0], FRotator::ZeroRotator);
+		GetWorld()->SpawnActor<AActor>(EnemyClass, LocationsToSpawnEnemies[0], FRotator::ZeroRotator);
 	}
 }
 
@@ -117,6 +113,7 @@ void AFPSAIProjGameMode::RespawnPlayerTimeElapsed(AController* Controller)
 		UGameplayStatics::OpenLevel(GetWorld(), "AIProjMap");
 	}
 }
+
 void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
 	AFPSAIProjCharacter* Player = Cast<AFPSAIProjCharacter>(VictimActor);
@@ -134,13 +131,9 @@ void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 	}
 
 	APawn* KillerPawn = Cast<APawn>(Killer);
-	if (!KillerPawn)
-	{
-		return;
-	}
-
 	ACreditsPlayerState* PlayerState = KillerPawn->GetPlayerState<ACreditsPlayerState>();
-	if (PlayerState)
+
+	if (PlayerState && KillerPawn)
 	{
 		PlayerState->ApplyCreditsChange(CreditsForKill);
 	}

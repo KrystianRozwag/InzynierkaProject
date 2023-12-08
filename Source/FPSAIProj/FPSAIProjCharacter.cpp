@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FPSAIProjCharacter.h"
-#include "FPSAIProjProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -9,7 +8,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "FPSAIProjGameMode.h"
 #include "PHealthComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -36,7 +34,6 @@ AFPSAIProjCharacter::AFPSAIProjCharacter()
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	HealthComponent = CreateDefaultSubobject<UPHealthComponent>("HealthComponent");
@@ -126,7 +123,7 @@ void AFPSAIProjCharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthCompo
 		}
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 
-		PlayerController->bEnableClickEvents = 0; //temp fix
+		PlayerController->bEnableClickEvents = 0;
 		DisableInput(PlayerController); // if player is dead, disabling input
 		PlayerController->UnPossess();
 
