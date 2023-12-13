@@ -3,16 +3,16 @@
 
 #include "CreditsPlayerState.h"
 
-int ACreditsPlayerState::GetCredits() const
+int ACreditsPlayerState::GetPoints() const
 {
-	return Credits;
+	return Points;
 }
 
-void ACreditsPlayerState::ApplyCreditsChange(int Delta)
+void ACreditsPlayerState::ApplyPointsChange(int Delta)
 {
 	if(Delta>0.0f)
 	{
-		Credits += Delta;
-		OnCreditsChanged.Broadcast(this, Credits, Delta);
+		Points += Delta;
+		OnPointsChanged.Broadcast(this, Points, Delta);
 	}
 }

@@ -7,7 +7,7 @@
 #include "CreditsPlayerState.generated.h"
 
 //declaring on event change to observe for credits change based on event rather than every tick so its better optimized
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCreditsChanged, ACreditsPlayerState*, PlayerState, int, NewCredits, int, Delta); 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPointsChanged, ACreditsPlayerState*, PlayerState, int, NewCredits, int, Delta);
 
 UCLASS()
 class FPSAIPROJ_API ACreditsPlayerState : public APlayerState
@@ -16,16 +16,16 @@ class FPSAIPROJ_API ACreditsPlayerState : public APlayerState
 
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="Credits")
-	int Credits;
+	UPROPERTY(EditDefaultsOnly, Category="Points")
+	int Points;
 
 public:
-	UFUNCTION(BlueprintCallable, Category="Credits")
-	int GetCredits() const;
+	UFUNCTION(BlueprintCallable, Category="Points")
+	int GetPoints() const;
 
-	UFUNCTION(BlueprintCallable, Category="Credits")
-	void ApplyCreditsChange(int Delta);
+	UFUNCTION(BlueprintCallable, Category="Points")
+	void ApplyPointsChange(int Delta);
 
-	UPROPERTY(BlueprintAssignable, Category="Credits")
-	FOnCreditsChanged OnCreditsChanged;
+	UPROPERTY(BlueprintAssignable, Category="Points")
+	FOnPointsChanged OnPointsChanged;
 };

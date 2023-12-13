@@ -6,6 +6,7 @@
 #include "EngineUtils.h"
 #include "FPSAIProjCharacter.h"
 #include "PHealthComponent.h"
+#include "TimerManager.h"
 #include "AI/PAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
@@ -135,6 +136,6 @@ void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 
 	if (PlayerState && KillerPawn)
 	{
-		PlayerState->ApplyCreditsChange(CreditsForKill);
+		PlayerState->ApplyPointsChange(CreditsForKill);
 	}
 }

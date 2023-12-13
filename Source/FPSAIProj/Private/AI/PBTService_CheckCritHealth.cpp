@@ -6,6 +6,7 @@
 #include <string>
 
 #include "AIController.h"
+#include "DrawDebugHelpers.h"
 #include "PHealthComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
