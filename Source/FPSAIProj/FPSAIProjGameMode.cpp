@@ -25,7 +25,7 @@ AFPSAIProjGameMode::AFPSAIProjGameMode()
 
 	RespawnDelay = 5.f;
 
-	CreditsForKill = 10;
+	PointsForKill = 10;
 	PlayerStateClass = ACreditsPlayerState::StaticClass();
 }
 
@@ -136,6 +136,6 @@ void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 
 	if (PlayerState && KillerPawn)
 	{
-		PlayerState->ApplyPointsChange(CreditsForKill);
+		PlayerState->ApplyPointsChange(PointsForKill);
 	}
 }

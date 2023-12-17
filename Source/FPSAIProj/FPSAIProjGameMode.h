@@ -21,7 +21,7 @@ protected:
 
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
-	int CreditsForKill;
+	int PointsForKill;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSubclassOf<AActor> EnemyClass;
