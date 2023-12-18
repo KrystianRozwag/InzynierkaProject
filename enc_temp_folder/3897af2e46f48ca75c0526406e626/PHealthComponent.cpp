@@ -29,7 +29,11 @@ float UPHealthComponent::GetHealth() const
 }
 bool UPHealthComponent::ApplyHealthChange(AActor* Actor, float Delta)
 {
+	float OldHealth = Health;
+
 	Health = FMath::Clamp(Health + Delta, 0.f, HealthMax);
+
+	//float NewDelta = Health - OldHealth;
 
 	OnHealthChanged.Broadcast(Actor, this, Health, Delta);
 	return Delta < 0;
