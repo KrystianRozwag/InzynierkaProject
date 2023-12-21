@@ -124,10 +124,13 @@ void AFPSAIProjCharacter::OnHealthChanged(AActor* InstigatorActor, UPHealthCompo
 			GameMode->OnActorKilled(Cast<AActor>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0)), InstigatorActor);
 		}
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		if(PlayerController)
+		{
+			PlayerController->bEnableClickEvents = 0; //temp fix
+			DisableInput(PlayerController); // if player is dead, disabling input
+			PlayerController->UnPossess();
+		}
 
-		PlayerController->bEnableClickEvents = 0; //temp fix
-		DisableInput(PlayerController); // if player is dead, disabling input
-		PlayerController->UnPossess();
 
 	}
 }

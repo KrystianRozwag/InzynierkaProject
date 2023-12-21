@@ -18,7 +18,7 @@ void UPBTService_CheckCritHealth::TickNode(UBehaviorTreeComponent& OwnerComp, ui
 	if(AIPawn)
 	{
 		UPHealthComponent* HealthComponent = AIPawn->FindComponentByClass<UPHealthComponent>();
-		DrawDebugString(GetWorld(), AIPawn->GetActorLocation(),FString::SanitizeFloat(HealthComponent->GetHealth()), 0, FColor::Green, 2.0f, false, 1);
+		//DrawDebugString(GetWorld(), AIPawn->GetActorLocation(),FString::SanitizeFloat(HealthComponent->GetHealth()), 0, FColor::Green, 2.0f, false, 1);
 		if(HealthComponent)
 		{
 			SetLowHealthInBlackboard(OwnerComp, HealthComponent);

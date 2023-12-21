@@ -39,7 +39,7 @@ void APAICharacter::OnPawnSeen(APawn* Pawn)
 	{
 		AIController->GetBlackboardComponent()->SetValueAsObject("Player", Pawn);
 
-		DrawDebugString(GetWorld(), GetActorLocation(), "Player seen", nullptr, FColor::Red, 4.0f, true);
+		//DrawDebugString(GetWorld(), GetActorLocation(), "Player seen", nullptr, FColor::Red, 4.0f, true);
 	}
 }
 
