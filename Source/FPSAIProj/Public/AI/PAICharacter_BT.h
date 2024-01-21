@@ -3,39 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PAICharacterBase.h"
-#include "GameFramework/Character.h"
-#include "PAICharacter.generated.h"
-
+#include "AI/PAICharacterBase.h"
+#include "PAICharacter_BT.generated.h"
 
 class UPawnSensingComponent;
 class UPHealthComponent;
 UCLASS()
-class FPSAIPROJ_API APAICharacter : public ACharacter
+class FPSAIPROJ_API APAICharacter_BT : public APAICharacterBase
 {
 	GENERATED_BODY()
-
 public:
-	APAICharacter();
-
+	APAICharacter_BT();
 protected:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UPHealthComponent* HealthComponent;
+//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+//	UPHealthComponent* HealthComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Effects")
-	FName TimeOfHitParamName;
+//	UPROPERTY(VisibleAnywhere, Category = "Effects")
+//	FName TimeOfHitParamName;
 
 	void SetTarget(AActor* NewTarget);
 
 	virtual void PostInitializeComponents() override;
 
-	UPROPERTY(VisibleAnywhere, Category="Components")
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComponent;
 
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 
-	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth, float Delta);
 };

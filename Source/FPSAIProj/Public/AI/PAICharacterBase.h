@@ -3,26 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PAICharacterBase.h"
 #include "GameFramework/Character.h"
-#include "PAICharacter.generated.h"
-
-
-class UPawnSensingComponent;
+#include "PAICharacterBase.generated.h"
 class UPHealthComponent;
 UCLASS()
-class FPSAIPROJ_API APAICharacter : public ACharacter
+class FPSAIPROJ_API APAICharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	APAICharacter();
+	// Sets default values for this character's properties
+	APAICharacterBase();
 
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UPHealthComponent* HealthComponent;
-
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
 	FName TimeOfHitParamName;
 
@@ -30,11 +23,8 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	UPROPERTY(VisibleAnywhere, Category="Components")
-	UPawnSensingComponent* PawnSensingComponent;
-
-	UFUNCTION()
-	void OnPawnSeen(APawn* Pawn);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPHealthComponent* HealthComponent;
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth, float Delta);
