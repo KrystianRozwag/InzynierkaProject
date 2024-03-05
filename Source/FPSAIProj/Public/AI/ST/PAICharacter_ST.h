@@ -21,9 +21,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UAIPerceptionComponent* PerceptionComponent;
 
+	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStateTreeComponent* StateTreeComponent;
-	
 
+
+	UFUNCTION()
+	virtual void OnHealthChanged(AActor* InstigatorActor, UPHealthComponent* OwningComponent, float NewHealth, float Delta) override;
 };

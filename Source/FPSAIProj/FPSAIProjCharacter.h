@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "FPSAIProjCharacter.generated.h"
 
+class UPActionComponent;
 class UInputComponent;
 class USkeletalMeshComponent;
 class USceneComponent;
@@ -39,6 +40,9 @@ class AFPSAIProjCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SprintAction;
+
 	
 public:
 	AFPSAIProjCharacter();
@@ -65,8 +69,17 @@ public:
 	bool GetHasRifle();
 
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UPActionComponent* ActionComp;
+
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
+
+	void SprintStart();
+
+	void SprintStop();
+
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);

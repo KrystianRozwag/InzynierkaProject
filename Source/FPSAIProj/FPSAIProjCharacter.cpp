@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FPSAIProjGameMode.h"
+#include "PActionComponent.h"
 #include "PHealthComponent.h"
 
 #include "Kismet/GameplayStatics.h"
@@ -39,7 +40,7 @@ AFPSAIProjCharacter::AFPSAIProjCharacter()
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	HealthComponent = CreateDefaultSubobject<UPHealthComponent>("HealthComponent");
-
+	ActionComp = CreateDefaultSubobject<UPActionComponent>(TEXT("ActionComponent"));
 
 }
 
@@ -83,7 +84,24 @@ void AFPSAIProjCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFPSAIProjCharacter::Look);
+
+
+		//EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AFPSAIProjCharacter::SprintStart);
+		//EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Canceled, this, &AFPSAIProjCharacter::SprintStop);
+
+		PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFPSAIProjCharacter::SprintStart);
+		PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFPSAIProjCharacter::SprintStop);
 	}
+}
+
+void AFPSAIProjCharacter::SprintStart()
+{
+	ActionComp->StartActionByName(this, "Sprint");
+}
+
+void AFPSAIProjCharacter::SprintStop()
+{
+	ActionComp->StopActionByName(this, "Sprint");
 }
 
 
