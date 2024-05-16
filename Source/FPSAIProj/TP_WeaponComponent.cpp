@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "PActionComponent.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -73,7 +74,7 @@ void UTP_WeaponComponent::Fire()
 		}
 	}
 }
-
+//TODO check option to launch secondary attack from here
 void UTP_WeaponComponent::AttachWeapon(AFPSAIProjCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
@@ -101,8 +102,13 @@ void UTP_WeaponComponent::AttachWeapon(AFPSAIProjCharacter* TargetCharacter)
 		{
 			// Fire
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
+			EnhancedInputComponent->BindAction(SecondaryFireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::SecondaryAttack);
 		}
 	}
+}
+void UTP_WeaponComponent::SecondaryAttack()
+{
+	ActionComp->StartActionByName(GetOwner(), "SecondaryAttack");
 }
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -6,9 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "PAction.generated.h"
 
-/**
- * 
- */
+class UWorld;
 UCLASS(Blueprintable)
 class FPSAIPROJ_API UPAction : public UObject
 {
@@ -23,5 +21,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Action")
 	FName ActionName;
+
+	UWorld* GetWorld() const override;
 
 };

@@ -86,11 +86,12 @@ void AFPSAIProjCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFPSAIProjCharacter::Look);
 
 
-		//EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AFPSAIProjCharacter::SprintStart);
-		//EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Canceled, this, &AFPSAIProjCharacter::SprintStop);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AFPSAIProjCharacter::SprintStart);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Canceled, this, &AFPSAIProjCharacter::SprintStop);
 
-		PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFPSAIProjCharacter::SprintStart);
-		PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFPSAIProjCharacter::SprintStop);
+		//PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFPSAIProjCharacter::SprintStart);
+		//PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFPSAIProjCharacter::SprintStop);
+		PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &AFPSAIProjCharacter::SecondaryAttack);
 	}
 }
 
@@ -162,4 +163,15 @@ void AFPSAIProjCharacter::SetHasRifle(bool bNewHasRifle)
 bool AFPSAIProjCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+FVector AFPSAIProjCharacter::GetPawnViewLocation() const
+{
+	return FirstPersonCameraComponent->GetComponentLocation();
+
+}
+
+void AFPSAIProjCharacter::SecondaryAttack()
+{
+	ActionComp->StartActionByName(this, "SecondaryAttack");
 }

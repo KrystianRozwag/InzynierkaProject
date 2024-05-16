@@ -68,6 +68,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
 
+	virtual FVector GetPawnViewLocation() const override;
+
+	void SecondaryAttack();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")

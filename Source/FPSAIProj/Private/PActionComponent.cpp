@@ -37,8 +37,6 @@ void UPActionComponent::AddAction(TSubclassOf<UPAction> ActionClass)
 	{
 		return;
 	}
-
-
 	UPAction* NewAction = NewObject<UPAction>(this, ActionClass);
 	if(ensure(NewAction))
 	{
