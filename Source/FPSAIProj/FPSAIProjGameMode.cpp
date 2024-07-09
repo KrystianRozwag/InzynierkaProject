@@ -118,7 +118,7 @@ void AFPSAIProjGameMode::RespawnPlayerTimeElapsed(AController* Controller)
 void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
 	AFPSAIProjCharacter* Player = Cast<AFPSAIProjCharacter>(VictimActor);
-	APAICharacter* AICharacter = Cast<APAICharacter>(Killer);
+
 	if (Player) //if player killed
 	{
 		FTimerHandle TimerHandle_PlayerRespawnDelay;
@@ -127,7 +127,10 @@ void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 		RespawnDelegate.BindUFunction(this, "RespawnPlayerTimeElapsed", Player->GetController()); //bind RespawnPlayerTimeElapsed function, so after delay it will run and restart the game
 
 		GetWorldTimerManager().SetTimer(TimerHandle_PlayerRespawnDelay, RespawnDelegate, RespawnDelay, false);
-		AICharacter->GetCharacterMovement()->DisableMovement();
+		if(APAICharacter* AICharacter = Cast<APAICharacter>(Killer))
+		{
+			AICharacter->GetCharacterMovement()->DisableMovement();
+		}
 		Player->GetCharacterMovement()->StopMovementImmediately();
 	}
 
