@@ -7,7 +7,7 @@
 #include "PAICharacter_ST.generated.h"
 
 
-class UAIPerceptionComponent;
+//class UAIPerceptionComponent;
 class UStateTreeComponent;
 UCLASS()
 class FPSAIPROJ_API APAICharacter_ST : public APAICharacterBase
@@ -18,8 +18,8 @@ public:
 	// Sets default values for this character's properties
 	APAICharacter_ST();
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UAIPerceptionComponent* PerceptionComponent;
+	//UPROPERTY(VisibleAnywhere, Category = "Components")
+	//UAIPerceptionComponent* PerceptionComponent;
 
 	virtual void PostInitializeComponents() override;
 
