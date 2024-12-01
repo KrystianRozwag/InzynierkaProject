@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.4",
+	"EngineAssociation": "5.5",
 	"Category": "",
 	"Description": "",
-		"Modules": [
+	"Modules": [
 		{
 			"Name": "FPSAIProj",
 			"Type": "Runtime",
@@ -32,6 +32,10 @@
 		},
 		{
 			"Name": "StateTree",
+			"Enabled": true
+		},
+		{
+			"Name": "Chooser",
 			"Enabled": true
 		}
 	]
