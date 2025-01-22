@@ -23,7 +23,7 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UStateTreeComponent* StateTreeComponent;
 
 
