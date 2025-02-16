@@ -11,12 +11,37 @@
 #include "EnhancedInputSubsystems.h"
 #include "PActionComponent.h"
 
+
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 
+}
+
+void UTP_WeaponComponent::StopFiring()
+{
+	GetWorld()->GetTimerManager().ClearTimer(FullAutoTimerHandle);
+}
+
+void UTP_WeaponComponent::StartFiring()
+{
+	if (CurrentFireMode == E_FireMode::FullAuto)
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			FullAutoTimerHandle,
+			this,
+			&UTP_WeaponComponent::Fire,
+			FireRate,
+			true,
+			0.0f
+		);
+	}
+	else if (CurrentFireMode == E_FireMode::SemiAuto)
+	{
+		Fire();
+	}
 }
 
 void UTP_WeaponComponent::BeginPlay()
@@ -101,7 +126,8 @@ void UTP_WeaponComponent::AttachWeapon(AFPSAIProjCharacter* TargetCharacter)
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
 			// Fire
-			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
+			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &UTP_WeaponComponent::StartFiring);
+			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &UTP_WeaponComponent::StopFiring);
 			EnhancedInputComponent->BindAction(SecondaryFireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::SecondaryAttack);
 		}
 	}
