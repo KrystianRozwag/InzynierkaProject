@@ -36,7 +36,7 @@ void APAICharacter_ST::OnHealthChanged(AActor* InstigatorActor, UPHealthComponen
 
 		if (NewHealth <= 0.f)
 		{
-			AIController->GetBrainComponent()->StopLogic("Dead"); // stopping the BT because AI is dead
+			//AIController->GetBrainComponent()->StopLogic("Dead"); // stopping the BT because AI is dead
 
 			AFPSAIProjGameMode* GameMode = GetWorld()->GetAuthGameMode<AFPSAIProjGameMode>();
 			if (GameMode)
@@ -44,8 +44,9 @@ void APAICharacter_ST::OnHealthChanged(AActor* InstigatorActor, UPHealthComponen
 				GameMode->OnActorKilled(GetOwner(), InstigatorActor);
 			}
 			GetMesh()->SetAllBodiesSimulatePhysics(true);
-			GetCapsuleComponent()->SetCollisionProfileName("NoCollision");
-
+			//GetCapsuleComponent()->SetCollisionProfileName("Ragdoll");
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			AIController->StopMovement();
 			SetLifeSpan(5.f);
 		}
 	}

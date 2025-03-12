@@ -49,6 +49,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<AFPSAIProjProjectile> SecondaryProjectile;
+
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+	FTimerHandle SecondaryCooldownTimer;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float SecondaryCooldown = 10.0f;
+
 	/** Fire Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SecondaryFireAction;
