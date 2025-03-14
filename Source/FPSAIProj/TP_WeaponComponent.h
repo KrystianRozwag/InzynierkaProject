@@ -64,8 +64,8 @@ public:
 	// Header declarations
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float FireRate = 0.1f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	//	UPROPERTY(EditAnywhere, BlueprintReadWrite, EditInstanceOnly, Category = "Combat")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
 	E_FireMode CurrentFireMode = E_FireMode::SemiAuto; // Default value
 
 
