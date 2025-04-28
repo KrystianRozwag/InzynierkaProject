@@ -15,8 +15,6 @@ EStateTreeRunStatus FPSTTDistanceAttack::EnterState(FStateTreeExecutionContext& 
 {
         FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 
-        // Get AI Controller from external data
-        //const AAIController* AIController = Context.GetExternalDataPtr<AAIController>(AIControllerHandle);
 
         // Get AI Pawn from controller
         APawn* AIPawn = Cast<APawn>(InstanceData.AIPawn);
@@ -43,7 +41,7 @@ EStateTreeRunStatus FPSTTDistanceAttack::EnterState(FStateTreeExecutionContext& 
         {
             return EStateTreeRunStatus::Failed;
         }
-        
+
         const TArray<USceneComponent*>& Children = Mesh->GetAttachChildren();
         FVector MuzzleLocation;
         for (USceneComponent* Child : Children)
@@ -80,8 +78,6 @@ EStateTreeRunStatus FPSTTDistanceAttack::EnterState(FStateTreeExecutionContext& 
         FActorSpawnParameters Params;
         Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
         Params.Instigator = AIPawn;
-        FRotator AIPawnRotation = UKismetMathLibrary::FindLookAtRotation(AIPawn->GetActorLocation(), Player->GetActorLocation());
-        AIPawn->SetActorRotation(AIPawnRotation);
 
         UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
         
@@ -102,14 +98,7 @@ EStateTreeRunStatus FPSTTDistanceAttack::EnterState(FStateTreeExecutionContext& 
              //   }
                 UProjectileMovementComponent* ProjectileMovement = Bullet->GetProjectileMovement();
                 ProjectileMovement->Velocity = Direction * ProjectileMovement->MaxSpeed;
-                if (AnimInstance && Montage)
-                {
-                    const float Duration = AnimInstance->Montage_Play(Montage, PlayRate);
-                    //MontageEndedDelegate.BindLambda([this, &Context](UAnimMontage* Montage, bool bInterrupted) {
-                      //  Context.SendStateTreeEvent(FStateTreeEvent::);
-                     //   });
-                    //AnimInstance->Montage_SetEndDelegate(MontageEndedDelegate);
-                }
+
                 
                 return EStateTreeRunStatus::Succeeded;
             }

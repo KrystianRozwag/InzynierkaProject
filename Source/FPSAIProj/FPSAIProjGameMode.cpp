@@ -78,7 +78,7 @@ float AFPSAIProjGameMode::GetMaxNumOfEnemies() const
 
 void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
 {
-
+	const int32 Index = FMath::RandRange(0, EnemyClasses.Num() - 1);
 	if(QueryStatus != EEnvQueryStatus::Success)
 	{
 		return;
@@ -96,9 +96,10 @@ void AFPSAIProjGameMode::OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* Quer
 	TArray<FVector> LocationsToSpawnEnemies;
 	QueryInstance->GetQueryResultsAsLocations(LocationsToSpawnEnemies);
 
-	if(LocationsToSpawnEnemies.Num() > 0)
+	if(LocationsToSpawnEnemies.Num() > 0 && EnemyClasses[Index])
 	{
-		GetWorld()->SpawnActor<AActor>(EnemyClass, LocationsToSpawnEnemies[0], FRotator::ZeroRotator);
+
+		GetWorld()->SpawnActor<APAICharacterBase>(EnemyClasses[Index], LocationsToSpawnEnemies[0], FRotator::ZeroRotator);
 	}
 }
 

@@ -24,7 +24,7 @@ protected:
 	int PointsForKill;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	TSubclassOf<AActor> EnemyClass;
+	TArray<TSubclassOf<AActor>> EnemyClasses;
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
