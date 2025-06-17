@@ -8,6 +8,9 @@
 #include "PHealthComponent.h"
 #include "TimerManager.h"
 #include "AI/PAICharacter.h"
+#include "AI/ST/PAICharacter_ST.h"
+#include "AI/ST/PAIController_ST.h"
+#include "Components/CapsuleComponent.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
@@ -131,15 +134,23 @@ void AFPSAIProjGameMode::OnActorKilled(AActor* VictimActor, AActor* Killer)
 		if(APAICharacter* AICharacter = Cast<APAICharacter>(Killer))
 		{
 			AICharacter->GetCharacterMovement()->DisableMovement();
+			AICharacter->GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			AICharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 		Player->GetCharacterMovement()->StopMovementImmediately();
+		return;
 	}
 
 	APawn* KillerPawn = Cast<APawn>(Killer);
+	APAIController_ST* AIController = Cast<APAIController_ST>(VictimActor);
 	ACreditsPlayerState* PlayerState = KillerPawn->GetPlayerState<ACreditsPlayerState>();
 
-	if (PlayerState && KillerPawn)
+	if (PlayerState && KillerPawn && AIController)
 	{
+		APAICharacter_ST* AICharacter = Cast<APAICharacter_ST>(AIController->GetPawn());
+		AICharacter->GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		AICharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		PlayerState->ApplyPointsChange(PointsForKill);
+		AIController->Destroy();
 	}
 }
